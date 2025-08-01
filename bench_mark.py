@@ -64,7 +64,8 @@ class PerformanceBenchmark:
                     knowledge_db = {}
                     if algorithm == 'IDA*':
                         temp_puzzle = CubicPuzzle(dimension=3)
-                        move_catalog = self._generate_move_catalog(3)
+                        from puzzle_runner import generate_move_catalog
+                        move_catalog = generate_move_catalog(3)
                         knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
                             target_state=temp_puzzle.export_state(),
                             move_set=move_catalog,
@@ -132,7 +133,8 @@ class PerformanceBenchmark:
             # Test knowledge base building time
             start_time = time.time()
             puzzle = CubicPuzzle(dimension=size)
-            move_catalog = self._generate_move_catalog(size)
+            from puzzle_runner import generate_move_catalog
+            move_catalog = generate_move_catalog(size)
             
             # Limit exploration depth for larger cubes
             exploration_depth = min(8, 12 - size)
@@ -177,7 +179,8 @@ class PerformanceBenchmark:
             
             # Build knowledge base
             start_time = time.time()
-            move_catalog = self._generate_move_catalog(3)
+            from puzzle_runner import generate_move_catalog
+            move_catalog = generate_move_catalog(3)
             knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
                 target_state=puzzle.export_state(),
                 move_set=move_catalog,
@@ -226,7 +229,8 @@ class PerformanceBenchmark:
         puzzle = CubicPuzzle(dimension=3)
         
         # Build standard knowledge base
-        move_catalog = self._generate_move_catalog(3)
+        from puzzle_runner import generate_move_catalog
+        move_catalog = generate_move_catalog(3)
         knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
             target_state=puzzle.export_state(),
             move_set=move_catalog,
@@ -349,14 +353,7 @@ class PerformanceBenchmark:
         print("   • Build knowledge base with depth 8-12 for optimal balance")
         print("   • Consider caching for repeated solves")
     
-    def _generate_move_catalog(self, puzzle_size):
-        """Generate move catalog for given puzzle size"""
-        return [
-            (rotation_type, layer_idx, direction)
-            for rotation_type in ['horizontal', 'vertical', 'sideways']
-            for direction in [0, 1]
-            for layer_idx in range(puzzle_size)
-        ]
+
     
     def plot_results(self):
         """Generate performance visualization plots"""

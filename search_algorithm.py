@@ -300,17 +300,20 @@ class AdaptiveSearchEngine:
             puzzle.execute_lateral_rotation(layer, direction)
     
     def _breadth_first_search_with_timeout(self, initial_state: str, max_depth: int, timeout: float) -> Optional[List[Tuple[str, int, int]]]:
-        """BFS with timeout mechanism"""
+        """BFS with timeout mechanism and optimized performance"""
         start_time = time.time()
         queue = deque([(initial_state, [])])
         visited = {initial_state}
+        nodes_checked = 0
         
         while queue:
-            if time.time() - start_time > timeout:
-                print(f"   BFS timeout after {timeout}s")
+            # Check timeout every 1000 nodes for better performance
+            if nodes_checked % 1000 == 0 and time.time() - start_time > timeout:
+                print(f"   BFS timeout after {timeout}s ({nodes_checked} nodes checked)")
                 return None
                 
             state, path = queue.popleft()
+            nodes_checked += 1
             self.nodes_expanded += 1
             
             if len(path) > max_depth:
@@ -320,7 +323,8 @@ class AdaptiveSearchEngine:
             if puzzle.is_completion_achieved():
                 return path
                 
-            for move in self._generate_all_moves(puzzle.size):
+            # Use ordered moves for better performance
+            for move in self._generate_ordered_moves(puzzle.size, path[-1] if path else None):
                 new_state = self._get_next_state(state, move)
                 if new_state not in visited:
                     visited.add(new_state)
@@ -388,11 +392,17 @@ class AdaptiveSearchEngine:
         
         return None
     
-    def solve_puzzle_simple(self, initial_state: str, max_moves: int = 20, timeout: float = 10) -> Optional[List[Tuple[str, int, int]]]:
-        """Simple iterative deepening search with timeout"""
+    def solve_puzzle_simple(self, initial_state: str, max_moves: int = 15, timeout: float = 5) -> Optional[List[Tuple[str, int, int]]]:
+        """Optimized simple iterative deepening search with better heuristics"""
         start_time = time.time()
         
-        for depth in range(1, max_moves + 1):
+        # Try BFS first for very shallow solutions (faster for simple cases)
+        quick_bfs = self._breadth_first_search(initial_state, max_depth=4)
+        if quick_bfs:
+            return quick_bfs
+        
+        # Use heuristic-guided search for deeper solutions
+        for depth in range(5, max_moves + 1):
             if time.time() - start_time > timeout:
                 print(f"   Simple search timeout after {timeout}s")
                 return None

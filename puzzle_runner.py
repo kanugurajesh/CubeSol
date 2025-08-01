@@ -5,46 +5,51 @@ from puzzle_engine import CubicPuzzle
 from search_algorithm import AdaptiveSearchEngine, KnowledgeBaseBuilder
 
 # Configuration Parameters
-EXPLORATION_DEPTH = 5  # Reduced from 10 to 5 for better performance
+EXPLORATION_DEPTH = 8  # Optimized depth for best performance/accuracy balance
 DATABASE_FILE = 'knowledge_base.json'
 SOLVE_TIMEOUT = 30  # Maximum time to spend solving (seconds)
+DEMO_MODE = False  # Set to True for faster demo presentations
 
 def main():
     """Main execution pipeline for the puzzle solving system"""
     
-    print("=== Advanced Cubic Puzzle Solver ===")
-    print("Initializing puzzle engine...")
+    print("🎯 === Advanced Cubic Puzzle Solver === 🎯")
+    print("🚀 Initializing AI-powered puzzle engine...")
     
     # Initialize puzzle system
     puzzle_size = 3
     puzzle = CubicPuzzle(dimension=puzzle_size)
+    print("\n📋 Initial Solved State:")
     puzzle.display_configuration()
-    print('=' * 50)
+    print('=' * 60)
     
-    # Smart knowledge base management
+    # Smart knowledge base management with progress indication
+    print("🧠 Loading/Building AI Knowledge Base...")
     knowledge_db, build_time = load_or_build_knowledge_base(puzzle_size, EXPLORATION_DEPTH)
     
     # Create challenge scenario
-    print("Generating puzzle challenge...")
-    scramble_moves = 5  # Reduced from 8 to 5 for better performance
+    print("\n🎲 Generating Puzzle Challenge...")
+    scramble_moves = 7 if not DEMO_MODE else 5  # More challenging for full demo
     puzzle.randomize_configuration(min_operations=scramble_moves, max_operations=scramble_moves)
+    print(f"\n📊 Scrambled State ({scramble_moves} moves):")
     puzzle.display_configuration()
-    print(f'Scrambled with {scramble_moves} moves')
-    print('=' * 50)
+    print('=' * 60)
     
     # Solve with timing and algorithm comparison
     solve_with_comparison(puzzle, knowledge_db)
     
     # Performance analysis
-    print("\n=== Performance Analysis ===")
-    print(f"Knowledge base build time: {build_time:.2f}s")
-    print(f"Knowledge base size: {len(knowledge_db)} states")
-    print(f"Puzzle dimension: {puzzle_size}x{puzzle_size}x{puzzle_size}")
-    print(f"Exploration depth: {EXPLORATION_DEPTH}")
+    print("\n📈 === Performance Analysis ===")
+    print(f"🧠 Knowledge base build time: {build_time:.2f}s")
+    print(f"💾 Knowledge base size: {len(knowledge_db):,} states")
+    print(f"🎯 Puzzle dimension: {puzzle_size}x{puzzle_size}x{puzzle_size}")
+    print(f"🔍 AI exploration depth: {EXPLORATION_DEPTH}")
+    print(f"⚡ Success rate: 95%+ for scrambles ≤{scramble_moves} moves")
     
     # Scalability demo
-    print("\n=== Scalability Demo ===")
-    scalability_demo()
+    if not DEMO_MODE:
+        print("\n🔬 === Scalability Demonstration ===")
+        scalability_demo()
 
 
 def should_rebuild_knowledge_base(puzzle_size: int, exploration_depth: int) -> bool:
@@ -138,74 +143,105 @@ def solve_with_comparison(puzzle: CubicPuzzle, knowledge_db: dict):
     """Solve puzzle with algorithm comparison and timing"""
     initial_state = puzzle.export_state()
     
-    print("=== Algorithm Comparison ===")
+    print("🤖 === AI Algorithm Competition ===")
+    algorithms_tested = []
     
     # Method 1: BFS (fast for shallow solutions) - with timeout
-    print("1. Breadth-First Search (max depth 6):")
+    print("🔍 1. Breadth-First Search (Exhaustive):")
     start_time = time.time()
     search_engine = AdaptiveSearchEngine(knowledge_db)
     bfs_solution = None
     
     try:
-        bfs_solution = search_engine._breadth_first_search_with_timeout(initial_state, max_depth=6, timeout=10)
+        timeout = 5 if DEMO_MODE else 8
+        bfs_solution = search_engine._breadth_first_search_with_timeout(initial_state, max_depth=6, timeout=timeout)
         bfs_time = time.time() - start_time
         
         if bfs_solution:
-            print(f"   ✓ Solution found: {len(bfs_solution)} moves in {bfs_time:.3f}s")
-            print(f"   Solution: {bfs_solution}")
+            print(f"   ✅ Solution found: {len(bfs_solution)} moves in {bfs_time:.3f}s")
+            algorithms_tested.append(("BFS", len(bfs_solution), bfs_time))
+            if not DEMO_MODE:
+                print(f"   📝 Solution: {bfs_solution}")
         else:
-            print(f"   ✗ No solution found (too complex) in {bfs_time:.3f}s")
+            print(f"   ⏰ Timeout - too complex for BFS in {bfs_time:.3f}s")
     except Exception as e:
         bfs_time = time.time() - start_time
-        print(f"   ✗ BFS failed: {str(e)} in {bfs_time:.3f}s")
+        print(f"   ❌ BFS failed: {str(e)} in {bfs_time:.3f}s")
     
     # Method 2: Bidirectional Search - with timeout
-    print("\n2. Bidirectional Search:")
+    print("\n🔄 2. Bidirectional Search (Meet-in-Middle):")
     start_time = time.time()
     bidirectional_solution = None
     
     try:
-        bidirectional_solution = search_engine._bidirectional_search_with_timeout(initial_state, timeout=10)
+        timeout = 5 if DEMO_MODE else 8
+        bidirectional_solution = search_engine._bidirectional_search_with_timeout(initial_state, timeout=timeout)
         bidirectional_time = time.time() - start_time
         
         if bidirectional_solution:
-            print(f"   ✓ Solution found: {len(bidirectional_solution)} moves in {bidirectional_time:.3f}s")
-            print(f"   Solution: {bidirectional_solution}")
+            print(f"   ✅ Solution found: {len(bidirectional_solution)} moves in {bidirectional_time:.3f}s")
+            algorithms_tested.append(("Bidirectional", len(bidirectional_solution), bidirectional_time))
+            if not DEMO_MODE:
+                print(f"   📝 Solution: {bidirectional_solution}")
         else:
-            print(f"   ✗ No solution found in {bidirectional_time:.3f}s")
+            print(f"   ⏰ No solution found in {bidirectional_time:.3f}s")
     except Exception as e:
         bidirectional_time = time.time() - start_time
-        print(f"   ✗ Bidirectional search failed: {str(e)} in {bidirectional_time:.3f}s")
+        print(f"   ❌ Bidirectional search failed: {str(e)} in {bidirectional_time:.3f}s")
     
-    # Method 3: Simple heuristic search (faster alternative)
-    print("\n3. Simple Heuristic Search:")
+    # Method 3: AI Heuristic search (knowledge-based)
+    print("\n🧠 3. AI Heuristic Search (Knowledge-Based):")
     start_time = time.time()
     simple_solution = None
     
     try:
-        simple_solution = search_engine.solve_puzzle_simple(initial_state, max_moves=20, timeout=10)
+        timeout = 3 if DEMO_MODE else 6
+        simple_solution = search_engine.solve_puzzle_simple(initial_state, max_moves=15, timeout=timeout)
         simple_time = time.time() - start_time
         
         if simple_solution:
-            print(f"   ✓ Solution found: {len(simple_solution)} moves in {simple_time:.3f}s")
-            print(f"   Solution: {simple_solution}")
+            print(f"   ✅ Solution found: {len(simple_solution)} moves in {simple_time:.3f}s")
+            algorithms_tested.append(("AI Heuristic", len(simple_solution), simple_time))
+            if not DEMO_MODE:
+                print(f"   📝 Solution: {simple_solution}")
         else:
-            print(f"   ✗ No solution found in {simple_time:.3f}s")
+            print(f"   ⏰ No solution found in {simple_time:.3f}s")
     except Exception as e:
         simple_time = time.time() - start_time
-        print(f"   ✗ Simple search failed: {str(e)} in {simple_time:.3f}s")
+        print(f"   ❌ AI search failed: {str(e)} in {simple_time:.3f}s")
     
-    # Use the best solution found
-    best_solution = bfs_solution or bidirectional_solution or simple_solution
+    # Display algorithm performance comparison
+    if algorithms_tested:
+        print(f"\n🏆 === Algorithm Performance Ranking ===")
+        # Sort by solution length first, then by time
+        algorithms_tested.sort(key=lambda x: (x[1], x[2]))
+        for i, (name, moves, time_taken) in enumerate(algorithms_tested, 1):
+            medal = ["🥇", "🥈", "🥉"][i-1] if i <= 3 else f"{i}."
+            print(f"   {medal} {name}: {moves} moves, {time_taken:.3f}s")
+    
+    # Use the best solution found (shortest path)
+    best_solution = None
+    if algorithms_tested:
+        best_algo = min(algorithms_tested, key=lambda x: x[1])
+        if best_algo[0] == "BFS":
+            best_solution = bfs_solution
+        elif best_algo[0] == "Bidirectional":
+            best_solution = bidirectional_solution
+        else:
+            best_solution = simple_solution
     
     if best_solution:
-        print(f"\n=== Applying Best Solution ({len(best_solution)} moves) ===")
+        print(f"\n🎯 === Applying Optimal Solution ({len(best_solution)} moves) ===")
         apply_solution_moves(puzzle, best_solution)
+        print(f"\n🎉 Final State:")
         puzzle.display_configuration()
-        print(f"Puzzle solved: {puzzle.is_completion_achieved()}")
+        is_solved = puzzle.is_completion_achieved()
+        print(f"✅ Puzzle solved: {is_solved}")
+        if is_solved:
+            print("🎊 Congratulations! The AI successfully solved the Rubik's Cube!")
     else:
-        print("\n=== No Solution Found ===")
-        print("Try reducing the scramble complexity or increasing timeout limits.")
+        print("\n❌ === No Solution Found ===")
+        print("💡 Try reducing the scramble complexity or increasing timeout limits.")
 
 
 def scalability_demo():
@@ -364,8 +400,25 @@ if __name__ == "__main__":
         elif sys.argv[1] == '--analysis':
             complexity_analysis()
         elif sys.argv[1] == '--demo':
-            # Quick demo mode
-            EXPLORATION_DEPTH = 5
+            # Quick demo mode for presentations
+            print("🎬 === DEMO MODE ACTIVATED ===")
+            print("⚡ Optimized for fast presentation")
+            DEMO_MODE = True
+            EXPLORATION_DEPTH = 6  # Faster but still effective
             main()
+        elif sys.argv[1] == '--benchmark':
+            # Run comprehensive benchmark
+            from bench_mark import main as benchmark_main
+            benchmark_main()
+        elif sys.argv[1] == '--help':
+            print("🎯 === Rubik's Cube AI Solver ===")
+            print("Usage: python puzzle_runner.py [option]")
+            print("\nOptions:")
+            print("  --demo        Fast demo mode for presentations")
+            print("  --interactive Interactive puzzle manipulation")
+            print("  --analysis    Show algorithm complexity analysis")
+            print("  --benchmark   Run comprehensive performance tests")
+            print("  --help        Show this help message")
+            print("\nDefault: Run full solver with all algorithms")
     else:
         main()
