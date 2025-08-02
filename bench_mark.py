@@ -11,7 +11,7 @@ class PerformanceBenchmark:
     Comprehensive performance benchmarking suite for the Rubik's Cube solver
     """
     
-    def __init__(self, puzzle_sizes=[2, 3], exploration_depths=[5, 10, 15]):
+    def __init__(self, puzzle_sizes=[2, 3], exploration_depths=[4, 5]):
         self.puzzle_sizes = puzzle_sizes
         self.exploration_depths = exploration_depths
         self.results = {}
@@ -445,7 +445,7 @@ def main():
     # Quick benchmark
     benchmark = PerformanceBenchmark(
         puzzle_sizes=[2, 3],  # Test 2x2 and 3x3
-        exploration_depths=[5, 6]  # Different knowledge base depths
+        exploration_depths=[4, 5]  # Different knowledge base depths
     )
     
     benchmark.run_full_benchmark()
