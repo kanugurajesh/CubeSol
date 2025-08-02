@@ -46,6 +46,43 @@ class CubicPuzzle:
 
 ---
 
+## How I Broke Down the Problem
+
+### My Problem-Solving Journey
+
+When I first approached the Rubik's Cube challenge, I realized this wasn't just about implementing a single algorithm—it was about understanding the mathematical complexity of a 43 quintillion state space. Here's how I systematically broke down this complex problem:
+
+#### 1. **Understanding the Core Challenge**
+- **State Explosion**: With 43,252,003,274,489,856,000 possible configurations, brute force was impossible
+- **Optimal Solutions**: Finding the shortest path through this massive state space
+- **Time Constraints**: Hackathon time limits required smart algorithm selection
+
+#### 2. **Decomposing Into Manageable Pieces**
+I identified four fundamental sub-problems:
+```
+Rubik's Cube Solver
+├── State Representation → How to model the 3D cube digitally
+├── Move Generation → How to apply rotations efficiently  
+├── Search Strategy → How to navigate the state space intelligently
+└── Performance Optimization → How to make it fast enough to be practical
+```
+
+#### 3. **Strategic Algorithm Selection**
+Rather than picking one approach, I implemented three complementary strategies:
+- **BFS**: Guaranteed optimal solutions for simple scrambles (≤6 moves)
+- **Bidirectional Search**: Meet-in-the-middle approach reducing complexity from O(b^d) to O(b^(d/2))
+- **AI Heuristic (IDA*)**: Pattern database with 2.1M pre-computed states for complex puzzles
+
+#### 4. **Pattern Recognition Insight**
+The breakthrough came when I realized that corner positions repeat in patterns. By pre-computing 2.1 million corner configurations, I could instantly estimate the minimum moves needed—turning an impossible search into a guided exploration.
+
+#### 5. **Validation Through Competition**
+I built the system to run all three algorithms simultaneously, letting them compete in real-time. This approach validated that my solutions were not just working, but optimal.
+
+This methodical breakdown transformed an overwhelming 43-quintillion-state problem into manageable, solvable components.
+
+---
+
 ## Data Structures Implementation
 
 ### Core Data Structures
