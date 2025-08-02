@@ -35,5 +35,3 @@ export function setReverse(reverse = null) {
     if (!mode.autoSolve) toggleShowDirection(!mode.reverse);
 }
 window.setReverse = setReverse;
-
-

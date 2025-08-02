@@ -1,5 +1,3 @@
-// Updated api.js - Works completely offline without backend
-
 // Local move tracker
 const LocalMoveTracker = {
     moves: [],
@@ -76,9 +74,6 @@ const LocalMoveTracker = {
         return rules.hasOwnProperty(key) ? rules[key] : false;
     }
 };
-
-// Remove the URL variable since we don't need it
-export let url = ""; // Keep for compatibility but unused
 
 export async function postMove(move) {
     // Just track the move locally

@@ -3,7 +3,6 @@ import { saveMove, undoLastMove } from "./action_utils.js";
 import { isAutoSolveMode, isReverseMode, setReverse } from "./modes.js";
 import { animate, Faces } from "./animations.js";
 
-
 const keyActions = {
     82: { // "R".charCodeAt()
       action: async () => {
