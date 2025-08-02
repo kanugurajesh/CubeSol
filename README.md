@@ -433,7 +433,7 @@ This AI-powered Rubik's Cube solver represents the pinnacle of algorithmic probl
 
 ---
 
-**🎯 Built with advanced algorithms, optimized for performance, designed to win! 🏆**
+**🎯 Built with advanced algorithms, optimized for performance**
 
 [![Demo](https://img.shields.io/badge/🎬-Live%20Demo-brightgreen.svg)](demo_presentation.py)
 [![Benchmark](https://img.shields.io/badge/📊-Performance-blue.svg)](bench_mark.py)
