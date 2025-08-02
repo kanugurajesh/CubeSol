@@ -11,6 +11,68 @@ This implementation addresses the core challenge requirements through a multi-al
 
 ---
 
+## Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+
+### Setup Instructions
+
+1. **Clone or download the repository**
+   ```bash
+   git clone https://github.com/kanugurajesh/CubeSol
+   cd CubeSol
+   ```
+
+2. **Create a virtual environment (recommended)**
+   ```bash
+   python -m venv venv
+   ```
+
+3. **Activate the virtual environment**
+   
+   On Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+   
+   On macOS/Linux:
+   ```bash
+   source venv/bin/activate
+   ```
+
+4. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Verify installation**
+   ```bash
+   python quick_test.py
+   ```
+
+## Quick Start
+
+### Instant Demo
+```bash
+# Run the complete solution
+python demo_presentation.py
+```
+
+### Interactive Experience
+```bash
+# Try the web interface (no installation needed for visualizer)
+open visualizer/index.html  # Interactive 3D cube solver
+```
+
+### Performance Analysis
+```bash
+# Run comprehensive benchmarks
+python bench_mark.py
+```
+
+
 ## Problem-Solving Approach
 
 ### Problem Decomposition
@@ -622,69 +684,6 @@ ALGORITHM EFFICIENCY:
 - Research Platform: Benchmarking and analysis tools
 - Practical Application: Real-world problem solving
 - Software Engineering: Clean, modular architecture
-
----
-
-## Installation
-
-### Prerequisites
-- Python 3.8 or higher
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-
-### Setup Instructions
-
-1. **Clone or download the repository**
-   ```bash
-   git clone https://github.com/kanugurajesh/CubeSol
-   cd CubeSol
-   ```
-
-2. **Create a virtual environment (recommended)**
-   ```bash
-   python -m venv venv
-   ```
-
-3. **Activate the virtual environment**
-   
-   On Windows:
-   ```bash
-   venv\Scripts\activate
-   ```
-   
-   On macOS/Linux:
-   ```bash
-   source venv/bin/activate
-   ```
-
-4. **Install Python dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Verify installation**
-   ```bash
-   python quick_test.py
-   ```
-
-## Quick Start
-
-### Instant Demo
-```bash
-# Run the complete solution
-python demo_presentation.py
-```
-
-### Interactive Experience
-```bash
-# Try the web interface (no installation needed for visualizer)
-open visualizer/index.html  # Interactive 3D cube solver
-```
-
-### Performance Analysis
-```bash
-# Run comprehensive benchmarks
-python bench_mark.py
-```
 
 ---
 
