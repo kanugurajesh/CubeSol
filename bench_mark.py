@@ -2,6 +2,7 @@ import time
 import statistics
 import json
 import matplotlib.pyplot as plt
+import threading
 from puzzle_engine import CubicPuzzle
 from search_algorithm import AdaptiveSearchEngine, KnowledgeBaseBuilder
 
@@ -14,6 +15,62 @@ class PerformanceBenchmark:
         self.puzzle_sizes = puzzle_sizes
         self.exploration_depths = exploration_depths
         self.results = {}
+        self.knowledge_base_cache = {}  # Cache for knowledge bases
+        
+    def get_or_build_knowledge_base(self, cube_size, exploration_depth):
+        """Get cached knowledge base or build new one if not exists"""
+        cache_key = (cube_size, exploration_depth)
+        
+        if cache_key not in self.knowledge_base_cache:
+            print(f"   Building knowledge base for {cube_size}x{cube_size}x{cube_size}, depth {exploration_depth}...")
+            puzzle = CubicPuzzle(dimension=cube_size)
+            from puzzle_runner import generate_move_catalog
+            move_catalog = generate_move_catalog(cube_size)
+            
+            start_time = time.time()
+            knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
+                target_state=puzzle.export_state(),
+                move_set=move_catalog,
+                exploration_depth=exploration_depth
+            )
+            build_time = time.time() - start_time
+            
+            self.knowledge_base_cache[cache_key] = {
+                'knowledge_db': knowledge_db,
+                'build_time': build_time,
+                'size': len(knowledge_db)
+            }
+            print(f"   Built in {build_time:.2f}s, {len(knowledge_db)} states")
+        else:
+            print(f"   Using cached knowledge base for {cube_size}x{cube_size}x{cube_size}, depth {exploration_depth}")
+            
+        return self.knowledge_base_cache[cache_key]
+    
+    def run_with_timeout(self, func, timeout_seconds=30):
+        """Run a function with a timeout (Windows compatible)"""
+        result = [None]
+        exception = [None]
+        timed_out = [False]
+        
+        def target():
+            try:
+                result[0] = func()
+            except Exception as e:
+                exception[0] = e
+        
+        thread = threading.Thread(target=target)
+        thread.daemon = True
+        thread.start()
+        thread.join(timeout_seconds)
+        
+        if thread.is_alive():
+            timed_out[0] = True
+            return None, True  # None, timed_out
+        
+        if exception[0]:
+            raise exception[0]
+            
+        return result[0], False  # result, not_timed_out
         
     def run_full_benchmark(self):
         """Run comprehensive benchmark suite"""
@@ -46,6 +103,14 @@ class PerformanceBenchmark:
         
         self.results['algorithms'] = {}
         
+        # Pre-build knowledge base for IDA* to avoid rebuilding in trial loop
+        ida_star_kb = None
+        for algorithm in algorithms:
+            if algorithm == 'IDA*':
+                kb_data = self.get_or_build_knowledge_base(3, 8)
+                ida_star_kb = kb_data['knowledge_db']
+                break
+        
         for scramble_count in scramble_levels:
             print(f"\nTesting with {scramble_count} scramble moves:")
             self.results['algorithms'][scramble_count] = {}
@@ -56,37 +121,38 @@ class PerformanceBenchmark:
                 solution_lengths = []
                 success_count = 0
                 
+                # Select appropriate knowledge base
+                knowledge_db = ida_star_kb if algorithm == 'IDA*' else {}
+                
                 for trial in range(5):  # 5 trials per scramble level
                     puzzle.restore_factory_settings()
                     puzzle.randomize_configuration(scramble_count, scramble_count)
                     
-                    # Build minimal knowledge base for this test
-                    knowledge_db = {}
-                    if algorithm == 'IDA*':
-                        temp_puzzle = CubicPuzzle(dimension=3)
-                        from puzzle_runner import generate_move_catalog
-                        move_catalog = generate_move_catalog(3)
-                        knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
-                            target_state=temp_puzzle.export_state(),
-                            move_set=move_catalog,
-                            exploration_depth=8
-                        )
-                    
                     engine = AdaptiveSearchEngine(knowledge_db, depth_limit=20)
+                    
+                    # Define the solving function
+                    def solve_func():
+                        if algorithm == 'BFS':
+                            # Limit BFS depth based on scramble complexity
+                            max_depth = min(scramble_count + 2, 8)
+                            return engine._breadth_first_search(puzzle.export_state(), max_depth=max_depth)
+                        elif algorithm == 'Bidirectional':
+                            return engine._bidirectional_search(puzzle.export_state())
+                        else:  # IDA*
+                            return engine._ida_star_search(puzzle.export_state())
                     
                     start_time = time.time()
                     
                     try:
-                        if algorithm == 'BFS':
-                            solution = engine._breadth_first_search(puzzle.export_state(), max_depth=10)
-                        elif algorithm == 'Bidirectional':
-                            solution = engine._bidirectional_search(puzzle.export_state())
-                        else:  # IDA*
-                            solution = engine._ida_star_search(puzzle.export_state())
+                        # Set timeout based on algorithm and scramble complexity
+                        timeout = 5 if algorithm == 'BFS' and scramble_count >= 6 else 30
+                        solution, timed_out = self.run_with_timeout(solve_func, timeout)
                         
                         solve_time = time.time() - start_time
                         
-                        if solution:
+                        if timed_out:
+                            print(f"   {algorithm} timed out after {timeout}s")
+                        elif solution:
                             times.append(solve_time)
                             solution_lengths.append(len(solution))
                             success_count += 1
@@ -130,24 +196,16 @@ class PerformanceBenchmark:
             print(f"\nTesting {size}x{size}x{size} cube:")
             self.results['scalability'][size] = {}
             
-            # Test knowledge base building time
-            start_time = time.time()
-            puzzle = CubicPuzzle(dimension=size)
-            from puzzle_runner import generate_move_catalog
-            move_catalog = generate_move_catalog(size)
-            
             # Limit exploration depth for larger cubes
             exploration_depth = min(8, 12 - size)
             
-            knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
-                target_state=puzzle.export_state(),
-                move_set=move_catalog,
-                exploration_depth=exploration_depth
-            )
-            
-            kb_build_time = time.time() - start_time
+            # Use cached knowledge base
+            kb_data = self.get_or_build_knowledge_base(size, exploration_depth)
+            knowledge_db = kb_data['knowledge_db']
+            kb_build_time = kb_data['build_time']
             
             # Test solving time
+            puzzle = CubicPuzzle(dimension=size)
             puzzle.randomize_configuration(5, 5)  # Fixed scramble for comparison
             engine = AdaptiveSearchEngine(knowledge_db)
             
@@ -177,16 +235,10 @@ class PerformanceBenchmark:
         for depth in self.exploration_depths:
             print(f"\nTesting exploration depth {depth}:")
             
-            # Build knowledge base
-            start_time = time.time()
-            from puzzle_runner import generate_move_catalog
-            move_catalog = generate_move_catalog(3)
-            knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
-                target_state=puzzle.export_state(),
-                move_set=move_catalog,
-                exploration_depth=depth
-            )
-            kb_build_time = time.time() - start_time
+            # Use cached knowledge base
+            kb_data = self.get_or_build_knowledge_base(3, depth)
+            knowledge_db = kb_data['knowledge_db']
+            kb_build_time = kb_data['build_time']
             
             # Test solving with different scramble complexities
             solve_times = []
@@ -228,14 +280,9 @@ class PerformanceBenchmark:
         self.results['complexity'] = {}
         puzzle = CubicPuzzle(dimension=3)
         
-        # Build standard knowledge base
-        from puzzle_runner import generate_move_catalog
-        move_catalog = generate_move_catalog(3)
-        knowledge_db = KnowledgeBaseBuilder.construct_heuristic_database(
-            target_state=puzzle.export_state(),
-            move_set=move_catalog,
-            exploration_depth=10
-        )
+        # Use cached knowledge base
+        kb_data = self.get_or_build_knowledge_base(3, 10)
+        knowledge_db = kb_data['knowledge_db']
         
         scramble_levels = range(1, 21, 2)  # 1, 3, 5, ..., 19
         
