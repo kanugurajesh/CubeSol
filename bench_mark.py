@@ -98,7 +98,7 @@ class PerformanceBenchmark:
         print("-" * 40)
         
         puzzle = CubicPuzzle(dimension=3)
-        scramble_levels = [3, 6, 9, 12, 15]
+        scramble_levels = [3, 4, 5 , 6]
         algorithms = ['BFS', 'Bidirectional', 'IDA*']
         
         self.results['algorithms'] = {}
@@ -445,7 +445,7 @@ def main():
     # Quick benchmark
     benchmark = PerformanceBenchmark(
         puzzle_sizes=[2, 3],  # Test 2x2 and 3x3
-        exploration_depths=[5, 8, 12]  # Different knowledge base depths
+        exploration_depths=[5, 6]  # Different knowledge base depths
     )
     
     benchmark.run_full_benchmark()

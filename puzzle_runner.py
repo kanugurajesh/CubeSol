@@ -45,11 +45,6 @@ def main():
     print(f"🎯 Puzzle dimension: {puzzle_size}x{puzzle_size}x{puzzle_size}")
     print(f"🔍 AI exploration depth: {EXPLORATION_DEPTH}")
     print(f"⚡ Success rate: 95%+ for scrambles ≤{scramble_moves} moves")
-    
-    # Scalability demo
-    if not DEMO_MODE:
-        print("\n🔬 === Scalability Demonstration ===")
-        scalability_demo()
 
 
 def should_rebuild_knowledge_base(puzzle_size: int, exploration_depth: int) -> bool:
@@ -243,28 +238,6 @@ def solve_with_comparison(puzzle: CubicPuzzle, knowledge_db: dict):
         print("\n❌ === No Solution Found ===")
         print("💡 Try reducing the scramble complexity or increasing timeout limits.")
 
-
-def scalability_demo():
-    """Demonstrate scalability across different cube sizes"""
-    sizes_to_test = [2, 3]  # 4x4 would take too long for demo
-    
-    for size in sizes_to_test:
-        print(f"\n--- Testing {size}x{size}x{size} Cube ---")
-        
-        # Create and scramble cube
-        test_puzzle = CubicPuzzle(dimension=size)
-        test_puzzle.randomize_configuration(min_operations=5, max_operations=5)
-        
-        # Quick solve with BFS
-        start_time = time.time()
-        engine = AdaptiveSearchEngine({})  # Empty knowledge base for speed
-        solution = engine._breadth_first_search(test_puzzle.export_state(), max_depth=8)
-        solve_time = time.time() - start_time
-        
-        if solution:
-            print(f"   ✓ Solved in {len(solution)} moves ({solve_time:.3f}s)")
-        else:
-            print(f"   ✗ Not solved in quick test ({solve_time:.3f}s)")
 
 
 def complexity_analysis():

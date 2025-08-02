@@ -367,6 +367,60 @@ WINNER: Bidirectional (5 moves, 0.206s)
 SUCCESS! Puzzle solved optimally!
 ```
 
+##### bench_mark.py output
+
+```
+PS C:\projects\Rubiks> python .\bench_mark.py
+🚀 Starting Comprehensive Performance Benchmark
+============================================================
+
+📊 Algorithm Performance Comparison
+----------------------------------------
+   Building knowledge base for 3x3x3, depth 8...
+Building Knowledge Base: 3982248it [01:07, 58603.80it/s]
+
+Knowledge base construction complete:
+  Total states: 3140750
+  Max depth reached: 8
+  States processed: 221236
+   Built in 68.18s, 3140750 states
+
+Testing with 3 scramble moves:
+   BFS         : 0.387s avg, 2.8 moves avg, 100% success
+   Bidirectional: 0.005s avg, 3.0 moves avg, 100% success
+IDA* iteration 1, threshold: 3
+IDA* iteration 1, threshold: 3
+IDA* iteration 1, threshold: 3
+IDA* iteration 1, threshold: 1
+IDA* iteration 1, threshold: 3
+   IDA*        : 0.002s avg, 2.6 moves avg, 100% success
+
+Testing with 6 scramble moves:
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS         : No solutions found
+   Bidirectional: 0.466s avg, 5.2 moves avg, 100% success
+IDA* iteration 1, threshold: 7
+IDA* iteration 1, threshold: 11
+IDA* iteration 1, threshold: 4
+IDA* iteration 1, threshold: 8
+IDA* iteration 1, threshold: 12
+   IDA* timed out after 30s
+   IDA*        : 3.891s avg, 6.0 moves avg, 80% success
+
+Testing with 9 scramble moves:
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS timed out after 5s
+   BFS         : No solutions found
+   Bidirectional timed out after 30s
+```
+
 #### Performance Analytics
 ```
 KNOWLEDGE BASE STATISTICS:
