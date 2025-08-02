@@ -3,7 +3,6 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production-brightgreen.svg)]()
-[![Hackathon](https://img.shields.io/badge/Hackathon-Winner-gold.svg)]()
 
 > **🎯 Advanced Computer Science Masterpiece**: A comprehensive implementation of multiple AI algorithms that solves Rubik's Cube puzzles optimally, featuring real-time performance comparison, scalable architecture, and interactive visualization. This project demonstrates mastery of complex algorithms, data structures, and software engineering principles.
 
@@ -94,7 +93,7 @@ backward_frontier: Dict[str, List[Move]] = {}
 visited_states: Set[str] = set()
 ```
 
-**🏆 WHY WE WIN:**
+**🏆 Features:**
 - **Memory Efficiency**: O(d) space complexity for IDA*
 - **Fast Lookups**: O(1) pattern database access
 - **Optimal Storage**: Compressed state representation
