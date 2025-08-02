@@ -1,17 +1,14 @@
-# 🏆 AI-Powered Rubik's Cube Solver - Hackathon Winner 🏆
+# AI-Powered Rubik's Cube Solver
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production-brightgreen.svg)]()
-[![Hackathon](https://img.shields.io/badge/Hackathon-Winner-gold.svg)]()
 
 > **🎯 Advanced Computer Science Masterpiece**: A comprehensive implementation of multiple AI algorithms that solves Rubik's Cube puzzles optimally, featuring real-time performance comparison, scalable architecture, and interactive visualization. This project demonstrates mastery of complex algorithms, data structures, and software engineering principles.
 
 ---
 
 ## 🎯 Hackathon Challenge: "Solve Rubik's Cube"
-
-### 🏅 **Why This Project Wins:**
 
 **✅ EXCEEDS ALL REQUIREMENTS:**
 - ✨ **Problem-Solving Approach**: Multi-algorithm architecture with intelligent fallback systems
@@ -96,7 +93,7 @@ backward_frontier: Dict[str, List[Move]] = {}
 visited_states: Set[str] = set()
 ```
 
-**🏆 WHY WE WIN:**
+**🏆 Features:**
 - **Memory Efficiency**: O(d) space complexity for IDA*
 - **Fast Lookups**: O(1) pattern database access
 - **Optimal Storage**: Compressed state representation
@@ -343,7 +340,7 @@ def run_presentation():
 
 ---
 
-## 🏆 **Why This Project Wins the Hackathon**
+## 🏆 **Why This Project Stands Out**
 
 ### 🎯 **Technical Excellence:**
 - **✅ Complete Implementation**: All requirements exceeded
@@ -371,7 +368,7 @@ def run_presentation():
 
 ---
 
-## 🚀 **Quick Start - See It Win!**
+## 🚀 **Quick Start**
 
 ### 🎬 **Instant Demo:**
 ```bash
@@ -422,7 +419,7 @@ python bench_mark.py
 
 ---
 
-## 🎊 **Conclusion - The Winning Solution**
+## 🎊 **Conclusion**
 
 This AI-powered Rubik's Cube solver represents the pinnacle of algorithmic problem-solving, combining:
 
@@ -436,7 +433,7 @@ This AI-powered Rubik's Cube solver represents the pinnacle of algorithmic probl
 
 ---
 
-**🎯 Built with advanced algorithms, optimized for performance, designed to win! 🏆**
+**🎯 Built with advanced algorithms, optimized for performance**
 
 [![Demo](https://img.shields.io/badge/🎬-Live%20Demo-brightgreen.svg)](demo_presentation.py)
 [![Benchmark](https://img.shields.io/badge/📊-Performance-blue.svg)](bench_mark.py)
