@@ -5,6 +5,7 @@ import { resetCubeObject} from './rubik.js'; // defines the cube and its actions
 import './action_utils.js'; // manages user interactions, performs moves, and displays action info on the GUI
 import { initKeyHandler } from './keyHandler.js';
 import './solutionService.js'; // implements functions for autosolve mode
+import './scramble.js'; // implements scramble functionality
 import { render } from './sceneManager.js';
 import { resetMode } from './modes.js';
 import { resetBackendState } from './api.js';

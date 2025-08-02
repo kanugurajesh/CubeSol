@@ -113,7 +113,7 @@ canvas {
 #info-container {
   top: 24px;
   left: 24px;
-  width: 280px;
+  width: 300px;
 }
 
 #info-container h2 {
@@ -233,6 +233,7 @@ li:hover {
   display: flex;
   gap: 12px;
   margin-top: 0;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -314,6 +315,17 @@ li:hover {
 #reset-button:hover {
   background: rgba(245, 158, 11, 0.2);
   box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+#scramble-button {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+}
+
+#scramble-button:hover {
+  background: rgba(124, 58, 237, 0.2);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
 }
 
 .icon-btn {
@@ -404,6 +416,77 @@ li:hover {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Modal Styling */
+.modal-content {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--panel-border);
+}
+
+.modal-title {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+  color: var(--text-primary);
+}
+
+.form-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  border: 1px solid var(--accent-primary);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
 }
 
 /* Responsive Design */

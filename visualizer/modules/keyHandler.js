@@ -2,6 +2,7 @@ import { displayMove, showAlert } from "./ui.js";
 import { saveMove, undoLastMove } from "./action_utils.js";
 import { isAutoSolveMode, isReverseMode, setReverse } from "./modes.js";
 import { animate, Faces } from "./animations.js";
+import { isScrambleMode } from "./scramble.js";
 
 const keyActions = {
     82: { // "R".charCodeAt()
@@ -68,9 +69,13 @@ async function onDocumentKeyDown(event) {
         return;
     }
     lastKeyTime = currentTime;
-    // Ignore manual moves when in autosolve mode
+    // Ignore manual moves when in autosolve mode or scrambling
     if (isAutoSolveMode()) {
         showAlert("In autosolve mode:", "manual moves are temporarily disabled.");
+        return;
+    }
+    if (isScrambleMode()) {
+        showAlert("Scrambling in progress:", "manual moves are temporarily disabled.");
         return;
     }
     const { action, face } = keyActions[keyCode];

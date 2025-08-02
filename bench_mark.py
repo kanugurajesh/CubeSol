@@ -399,9 +399,7 @@ class PerformanceBenchmark:
         print("   • Use IDA* with pattern DB for 12+ moves (comprehensive)")
         print("   • Build knowledge base with depth 8-12 for optimal balance")
         print("   • Consider caching for repeated solves")
-    
-
-    
+        
     def plot_results(self):
         """Generate performance visualization plots"""
         try:
