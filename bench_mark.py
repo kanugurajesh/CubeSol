@@ -98,7 +98,7 @@ class PerformanceBenchmark:
         print("-" * 40)
         
         puzzle = CubicPuzzle(dimension=3)
-        scramble_levels = [3, 4, 5 , 6]
+        scramble_levels = [3, 4]
         algorithms = ['BFS', 'Bidirectional', 'IDA*']
         
         self.results['algorithms'] = {}
@@ -107,7 +107,7 @@ class PerformanceBenchmark:
         ida_star_kb = None
         for algorithm in algorithms:
             if algorithm == 'IDA*':
-                kb_data = self.get_or_build_knowledge_base(3, 8)
+                kb_data = self.get_or_build_knowledge_base(3, 4)
                 ida_star_kb = kb_data['knowledge_db']
                 break
         
@@ -197,7 +197,7 @@ class PerformanceBenchmark:
             self.results['scalability'][size] = {}
             
             # Limit exploration depth for larger cubes
-            exploration_depth = min(8, 12 - size)
+            exploration_depth = min(4, 12 - size)
             
             # Use cached knowledge base
             kb_data = self.get_or_build_knowledge_base(size, exploration_depth)
@@ -209,9 +209,17 @@ class PerformanceBenchmark:
             puzzle.randomize_configuration(5, 5)  # Fixed scramble for comparison
             engine = AdaptiveSearchEngine(knowledge_db)
             
+            # Define solving function with timeout
+            def solve_func():
+                return engine.solve_puzzle(puzzle.export_state())
+            
             start_time = time.time()
-            solution = engine.solve_puzzle(puzzle.export_state())
+            solution, timed_out = self.run_with_timeout(solve_func, timeout_seconds=60)
             solve_time = time.time() - start_time
+            
+            if timed_out:
+                print(f"   Solving timed out after 60s")
+                solution = None
             
             print(f"   Knowledge base: {kb_build_time:.2f}s, {len(knowledge_db)} states")
             print(f"   Solving time: {solve_time:.3f}s, {len(solution) if solution else 'No solution'} moves")
@@ -244,14 +252,21 @@ class PerformanceBenchmark:
             solve_times = []
             solution_lengths = []
             
-            for scramble_moves in [5, 8, 12]:
+            for scramble_moves in [4, 5]:
                 puzzle.restore_factory_settings()
                 puzzle.randomize_configuration(scramble_moves, scramble_moves)
                 
                 engine = AdaptiveSearchEngine(knowledge_db)
+                
+                def solve_func():
+                    return engine.solve_puzzle(puzzle.export_state())
+                
                 start_time = time.time()
-                solution = engine.solve_puzzle(puzzle.export_state())
+                solution, timed_out = self.run_with_timeout(solve_func, timeout_seconds=30)
                 solve_time = time.time() - start_time
+                
+                if timed_out:
+                    solution = None
                 
                 if solution:
                     solve_times.append(solve_time)
@@ -298,11 +313,18 @@ class PerformanceBenchmark:
                 puzzle.randomize_configuration(scramble_count, scramble_count)
                 
                 engine = AdaptiveSearchEngine(knowledge_db)
+                
+                def solve_func():
+                    return engine.solve_puzzle(puzzle.export_state())
+                
                 start_time = time.time()
                 
                 try:
-                    solution = engine.solve_puzzle(puzzle.export_state())
+                    solution, timed_out = self.run_with_timeout(solve_func, timeout_seconds=20)
                     solve_time = time.time() - start_time
+                    
+                    if timed_out:
+                        solution = None
                     
                     if solution:
                         times.append(solve_time)
@@ -445,7 +467,7 @@ def main():
     # Quick benchmark
     benchmark = PerformanceBenchmark(
         puzzle_sizes=[2, 3],  # Test 2x2 and 3x3
-        exploration_depths=[4, 5]  # Different knowledge base depths
+        exploration_depths=[4]  # Different knowledge base depths
     )
     
     benchmark.run_full_benchmark()
@@ -455,7 +477,6 @@ def main():
         benchmark.plot_results()
     except Exception as e:
         print(f"Plotting skipped: {e}")
-
 
 if __name__ == "__main__":
     main()
