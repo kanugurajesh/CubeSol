@@ -734,3 +734,5 @@ The implementation provides a comprehensive solution that addresses all hackatho
 [![Demo](https://img.shields.io/badge/Demo-Live-brightgreen.svg)](demo_presentation.py)
 [![Benchmark](https://img.shields.io/badge/Performance-Analysis-blue.svg)](bench_mark.py)
 [![Interactive](https://img.shields.io/badge/Web-UI-orange.svg)](index.html)
+
+[![Watch the video](https://img.youtube.com/vi/G_zCslTjszc/maxresdefault.jpg)](https://youtu.be/G_zCslTjszc)
